@@ -6,12 +6,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const app = (0, express_1.default)();
 const port = process.env.PORT || 5000;
-const products = [{ id: 1, title: "tomato" }, { id: 2, title: "orange" }];
-const addresses = [{ id: 1, value: "new 12" }, { id: 2, value: "old 21" }];
-app.get('/', (req, res) => {
+const products = [
+    { id: 1, title: "tomato" },
+    { id: 2, title: "orange" },
+];
+const addresses = [
+    { id: 1, value: "new 12" },
+    { id: 2, value: "old 21" },
+];
+app.use(express_1.default.json());
+app.get("/", (req, res) => {
     res.send("Hello");
 });
-app.get('/products/', (req, res) => {
+app.get("/products", (req, res) => {
     if (req.query.title) {
         let searchString = req.query.title.toString();
         res.send(products.filter((p) => p.title.indexOf(searchString) > -1));
@@ -20,7 +27,12 @@ app.get('/products/', (req, res) => {
         res.send(products);
     }
 });
-app.get('/products/:id', (req, res) => {
+app.post("/products", (req, res) => {
+    const newProduct = { id: +new Date(), title: req.body.title };
+    products.push(newProduct);
+    res.status(201).send(newProduct);
+});
+app.get("/products/:id", (req, res) => {
     let product = products.find((p) => p.id === +req.params.id);
     if (product) {
         res.send(product);
@@ -29,7 +41,17 @@ app.get('/products/:id', (req, res) => {
         res.send(404);
     }
 });
-app.delete('/products/:id', (req, res) => {
+app.put("/products/:id", (req, res) => {
+    let product = products.find((p) => p.id === +req.params.id);
+    if (product) {
+        product.title = req.body.title;
+        res.send(product);
+    }
+    else {
+        res.send(404);
+    }
+});
+app.delete("/products/:id", (req, res) => {
     for (let i = 0; i < products.length; i++) {
         if (products[i].id === +req.params.id) {
             products.splice(i, 1);
@@ -39,10 +61,10 @@ app.delete('/products/:id', (req, res) => {
     }
     res.send(404);
 });
-app.get('/addresses', (req, res) => {
+app.get("/addresses", (req, res) => {
     res.send(addresses);
 });
-app.get('/addresses/:id', (req, res) => {
+app.get("/addresses/:id", (req, res) => {
     let address = addresses.find((p) => p.id === +req.params.id);
     if (address) {
         res.send(address);
