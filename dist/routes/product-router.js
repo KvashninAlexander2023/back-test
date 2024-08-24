@@ -2,27 +2,18 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.productsRoute = void 0;
 const express_1 = require("express");
-const products = [
-    { id: 1, title: "tomato" },
-    { id: 2, title: "orange" },
-];
 exports.productsRoute = (0, express_1.Router)({});
 exports.productsRoute.get("/", (req, res) => {
-    if (req.query.title) {
-        let searchString = req.query.title.toString();
-        res.send(products.filter((p) => p.title.indexOf(searchString) > -1));
-    }
-    else {
-        res.send(products);
-    }
+    var _a;
+    const foundProduct = productRepositories.findProduct((_a = req.query.title) === null || _a === void 0 ? void 0 : _a.toString());
+    res.send(foundProduct);
 });
 exports.productsRoute.post("/", (req, res) => {
-    const newProduct = { id: +new Date(), title: req.body.title };
-    products.push(newProduct);
+    const newProduct = productRepositories.createProduct(req.body.title);
     res.status(201).send(newProduct);
 });
 exports.productsRoute.get("/:id", (req, res) => {
-    let product = products.find((p) => p.id === +req.params.id);
+    let product = productRepositories.findProductById(+req.params.id);
     if (product) {
         res.send(product);
     }
@@ -31,9 +22,9 @@ exports.productsRoute.get("/:id", (req, res) => {
     }
 });
 exports.productsRoute.put("/:id", (req, res) => {
-    let product = products.find((p) => p.id === +req.params.id);
-    if (product) {
-        product.title = req.body.title;
+    const isUpdate = productRepositories.updateProduct(+req.params.id, req.body.title);
+    if (isUpdate) {
+        let product = productRepositories.findProductById(+req.params.id);
         res.send(product);
     }
     else {
@@ -41,12 +32,11 @@ exports.productsRoute.put("/:id", (req, res) => {
     }
 });
 exports.productsRoute.delete("/:id", (req, res) => {
-    for (let i = 0; i < products.length; i++) {
-        if (products[i].id === +req.params.id) {
-            products.splice(i, 1);
-            res.send(204);
-            return;
-        }
+    const isDelete = productRepositories.deleteProduct(+req.params.id);
+    if (isDelete) {
+        res.send(204);
     }
-    res.send(404);
+    else {
+        res.send(404);
+    }
 });
