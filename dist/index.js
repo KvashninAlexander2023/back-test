@@ -29,6 +29,16 @@ app.get('/products/:id', (req, res) => {
         res.send(404);
     }
 });
+app.delete('/products/:id', (req, res) => {
+    for (let i = 0; i < products.length; i++) {
+        if (products[i].id === +req.params.id) {
+            products.splice(i, 1);
+            res.send(204);
+            return;
+        }
+    }
+    res.send(404);
+});
 app.get('/addresses', (req, res) => {
     res.send(addresses);
 });

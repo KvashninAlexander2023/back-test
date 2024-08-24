@@ -29,7 +29,18 @@ app.get('/products/:id', (req:Request, res:Response) => {
   } else {
     res.send(404)
   }
+})
 
+app.delete('/products/:id', (req:Request, res:Response) => {
+  //req.params.id - параметр который мы получаем при запросе
+  for(let i =0; i < products.length; i++){
+    if(products[i].id === +req.params.id){
+      products.splice(i, 1)
+      res.send(204)
+      return
+    }
+  }
+  res.send(404)
 })
 
 app.get('/addresses', (req:Request, res:Response) => {
