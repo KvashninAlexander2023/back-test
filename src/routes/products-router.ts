@@ -1,33 +1,16 @@
 import { Request, Response, Router } from "express";
+import { productRepositories } from "../repositories/product-repositories";
 
 
 
 export const productsRoute = Router({})
 
 
-
-productsRoute.get("/", (req: Request, res: Response) => {
-
- const foundProduct = productRepositories.findProduct(req.query.title?.toString())
-    res.send(foundProduct);
-  })
-
-
 productsRoute.post("/", (req: Request, res: Response) => {
   const newProduct = productRepositories.createProduct(req.body.title)
-  
   res.status(201).send(newProduct);
 });
 
-productsRoute.get("/:id", (req: Request, res: Response) => {
-  //req.params.id - параметр который мы получаем при запросе
-  let product = productRepositories.findProductById(+req.params.id )
-  if (product) {
-    res.send(product);
-  } else {
-    res.send(404);
-  }
-});
 
 
 productsRoute.put("/:id", (req: Request, res: Response) => {
@@ -37,6 +20,23 @@ productsRoute.put("/:id", (req: Request, res: Response) => {
 
   if(isUpdate){
     let product = productRepositories.findProductById(+req.params.id )
+    res.send(product);
+  } else {
+    res.send(404);
+  }
+});
+
+productsRoute.get("/", (req: Request, res: Response) => {
+
+ const foundProduct = productRepositories.findProduct(req.query.title?.toString())
+ 
+    res.send(foundProduct);
+  })
+
+productsRoute.get("/:id", (req: Request, res: Response) => {
+  //req.params.id - параметр который мы получаем при запросе
+  let product = productRepositories.findProductById(+req.params.id )
+  if (product) {
     res.send(product);
   } else {
     res.send(404);

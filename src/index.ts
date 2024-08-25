@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { productsRoute } from "./routes/product-router";
+import { productsRoute } from "./routes/products-router";
 import { addressesRoute } from "./routes/addresses-router";
 // const express = require('express')
 
@@ -21,7 +21,6 @@ app.use("/addresses", addressesRoute)
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
-
 
 //запустить nodemon - yarn nodemon index.js
 // yarn init --yes

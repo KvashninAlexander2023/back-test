@@ -1,9 +1,11 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.productRepositories = void 0;
 const products = [
     { id: 1, title: "tomato" },
     { id: 2, title: "orange" },
 ];
-const productRepositories = {
+exports.productRepositories = {
     findProduct(title) {
         if (title) {
             let searchString = title.toString();

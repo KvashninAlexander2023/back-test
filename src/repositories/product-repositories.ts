@@ -3,7 +3,7 @@ const products = [
   { id: 2, title: "orange" },
 ];
 
-const productRepositories = {
+export const productRepositories = {
   findProduct(title: string | null | undefined){
     if (title) {
       let searchString = title.toString();
