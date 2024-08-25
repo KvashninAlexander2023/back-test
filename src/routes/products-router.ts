@@ -1,19 +1,24 @@
 import { Request, Response, Router } from "express";
 import { productRepositories } from "../repositories/product-repositories";
+import { body, validationResult } from "express-validator";
+import { inputValidationMiddleware } from "../midlewares/input-validation-middleware";
 
 
 
 export const productsRoute = Router({})
 
+const titleValidator = body("title").trim().isLength({min:3, max:10}).withMessage("Title length should be from 3 to 10 symbols")
 
-productsRoute.post("/", (req: Request, res: Response) => {
+productsRoute.post("/", titleValidator, inputValidationMiddleware, (req: Request, res: Response) => {
+
+
   const newProduct = productRepositories.createProduct(req.body.title)
   res.status(201).send(newProduct);
 });
 
 
 
-productsRoute.put("/:id", (req: Request, res: Response) => {
+productsRoute.put("/:id", titleValidator, inputValidationMiddleware, (req: Request, res: Response) => {
   //req.params.id - параметр который мы получаем при запросе
   
   const isUpdate = productRepositories.updateProduct(+req.params.id, req.body.title)
